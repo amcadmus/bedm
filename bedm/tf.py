@@ -28,6 +28,11 @@ class TF(BEDM):
         def run(self, sess, inputs):
             return sess.run(self.graph, feed_dict=inputs)
 
+        def store_graph(func):
+            def wrapper(self, xx):
+                self.graph = func(self, xx)
+                return self.graph
+            return wrapper
 
     @staticmethod
     def placeholder(

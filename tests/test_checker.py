@@ -18,9 +18,9 @@ class TModel(TF.Model):
                 dtype = TF.float32,
                 initializer = TF.constant_initializer(input_1))
 
+    @TF.Model.store_graph
     def forward(self,xx):
-        self.graph = TF.matmul(self.weight, xx)
-        return self.graph
+        return TF.matmul(self.weight, xx)
 
 
 class PModel(PD.Model):
@@ -35,11 +35,12 @@ class PModel(PD.Model):
                 initializer = PD.constant_initializer(input_1))
 
     def forward(self,xx):
-        self.graph = PD.matmul(self.weight, xx)
-        return self.graph
+        return PD.matmul(self.weight, xx)
 
 
 class TestModel(unittest.TestCase):
+    def setUp(self):
+        self.ref = np.matmul(input_1, input_2)        
 
     def test_tf(self):
         tsess = TF.Session()
@@ -50,11 +51,24 @@ class TestModel(unittest.TestCase):
         
         tg = tm.forward(ti)
         res = tm.run(tsess, {ti: input_2})[0]
-        ref = np.matmul(input_1, input_2)
 
         for ii in range(2):
             for jj in range(2):
-                self.assertAlmostEqual(res[ii][jj], ref[ii][jj], places = 10)
+                self.assertAlmostEqual(res[ii][jj], self.ref[ii][jj], places = 10)
+
+    def test_pd(self):
+        tsess = PD.Session()
+        pm = PModel('pmodel')
+        pi = PD.placeholder(PD.float32, shape = [2,2])
+        
+        PD.initialized_global(tsess)
+        
+        tg = pm.forward(pi)
+        res = pm.run(tsess, [input_2])
+
+        for ii in range(2):
+            for jj in range(2):
+                self.assertAlmostEqual(res[ii][jj], self.ref[ii][jj], places = 10)
 
 
 if __name__ == "__main__":
