@@ -49,7 +49,7 @@ class TF(BEDM):
 
 
     @staticmethod
-    def initialized_global(        
+    def global_initialize(        
             sess
     ):
         init_op = tf.global_variables_initializer()

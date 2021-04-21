@@ -43,7 +43,7 @@ class PD(BEDM):
         return pd.nn.initializer.Assign(value)
 
     @staticmethod
-    def initialized_global(        
+    def global_initialize(        
             sess
     ):
         pass
