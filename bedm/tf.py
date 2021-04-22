@@ -56,6 +56,14 @@ class TF(BEDM):
         return tf.placeholder(dtype, shape=shape, name=name)
 
     @staticmethod
+    def constant(
+            value,
+            dtype = None,
+            shape = None,
+            name = None):
+        return tf.constant(value, dtype=dtype, shape=shape, name=name)
+
+    @staticmethod
     def constant_initializer(
             value
     ):
@@ -93,3 +101,9 @@ class TF(BEDM):
     ):
         return tf.matmul(aa, bb, transpose_a=transpose_a, transpose_b=transpose_b, name=name)
 
+    @staticmethod
+    def tanh(
+            xx,
+            name = None
+    ):
+        return tf.nn.tanh(xx, name=name)

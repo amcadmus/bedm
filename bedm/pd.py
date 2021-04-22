@@ -38,6 +38,14 @@ class PD(BEDM):
         # return pd.fluid.layers.data(name=name, shape=shape, dtype=dtype)
 
     @staticmethod
+    def constant(
+            value,
+            dtype = None,
+            shape = None,
+            name = None):
+        return pd.to_tensor(value, dtype=dtype)
+
+    @staticmethod
     def constant_initializer(
             value
     ):
@@ -71,4 +79,12 @@ class PD(BEDM):
             name = None
     ):
         return pd.matmul(aa, bb, transpose_x = transpose_a, transpose_y = transpose_b)
+
+
+    @staticmethod
+    def tanh(
+            xx,
+            name = None
+    ):
+        return pd.tanh(xx, name=name)
 
