@@ -23,9 +23,10 @@ class PD(BEDM):
                 name = None
             super(PD.Model, self).__init__(name)
 
-        def run(self, sess, inputs):
-            new_i = [pd.to_tensor(ii) for ii in inputs]
-            return self.__call__(*new_i).numpy()
+        def run(self, sess, *arg, **kwarg):
+            new_arg = [pd.to_tensor(ii) for ii in arg]
+            new_kwarg = {kk: pd.to_tensor(vv) for kk, vv in kwarg.items()}
+            return self.__call__(*new_arg, **new_kwarg).numpy()
 
 
     @staticmethod

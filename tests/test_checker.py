@@ -47,9 +47,9 @@ class TestModel(unittest.TestCase):
         tm = TModel('tmodel')
         ti = TF.placeholder(TF.float32, shape = [2,2])             
         tg = tm.forward(ti)
-        res = tm.run(tsess, {ti: input_2})[0]
 
         TF.global_initialize(tsess)
+        res = tm.run(tsess, input_2)[0]
         for ii in range(2):
             for jj in range(2):
                 self.assertAlmostEqual(res[ii][jj], self.ref[ii][jj], places = 10)
@@ -59,9 +59,9 @@ class TestModel(unittest.TestCase):
         pm = PModel('pmodel')
         pi = PD.placeholder(PD.float32, shape = [2,2])
         tg = pm.forward(pi)
-        res = pm.run(tsess, [input_2])
 
         PD.global_initialize(tsess)        
+        res = pm.run(tsess, input_2)
         for ii in range(2):
             for jj in range(2):
                 self.assertAlmostEqual(res[ii][jj], self.ref[ii][jj], places = 10)

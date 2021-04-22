@@ -21,16 +21,30 @@ class TF(BEDM):
     class Model():
         def __init__(self, *arg, **kwarg):
             pass
-    
-        def forward(self, *arg, **kwarg):
-            pass
 
-        def run(self, sess, inputs):
+        def run(self, sess, *arg, **kwarg):
+            inputs = {}
+            # check arg
+            if len(self.arg) != len(arg):
+                raise RuntimeError("the positional argument does not match the graph")
+            # check kwarg
+            for kk in self.kwarg:
+                if kk not in kwarg:
+                    raise RuntimeError("the keyword argument dose not match the graph")
+            for kk in kwarg:
+                if kk not in self.kwarg:
+                    raise RuntimeError("the keyword argument dose not match the graph")
+            for ii in range(len(self.arg)):
+                inputs[self.arg[ii]] = arg[ii]
+            for ii in self.kwarg.keys():
+                inputs[self.kwarg[ii]] = kwarg[ii]
             return sess.run(self.graph, feed_dict=inputs)
 
         def store_graph(func):
-            def wrapper(self, xx):
-                self.graph = func(self, xx)
+            def wrapper(self, *arg, **kwarg):
+                self.arg = arg
+                self.kwarg = kwarg
+                self.graph = func(self, *arg, **kwarg)
                 return self.graph
             return wrapper
 
